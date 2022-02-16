@@ -10,7 +10,7 @@ using ExampleAPI.Models;
 
 namespace ExampleAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/ExampleItems")]
     [ApiController]
     public class ExampleItemsController : ControllerBase
     {
@@ -82,7 +82,7 @@ namespace ExampleAPI.Controllers
             await _context.SaveChangesAsync();
 
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(ExampleItem), new { id = exampleItem.Id }, exampleItem);
+            return CreatedAtAction(nameof(GetExampleItem), new { id = exampleItem.Id }, exampleItem);
         }
 
         // DELETE: api/ExampleItems/5
