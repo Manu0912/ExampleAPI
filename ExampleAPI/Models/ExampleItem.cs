@@ -1,4 +1,6 @@
-﻿namespace ExampleAPI.Models
+﻿using FluentValidation;
+
+namespace ExampleAPI.Models
 {
     public class ExampleItem
     {
@@ -6,4 +8,14 @@
         public string? Name { get; set; }
         public bool IsComplete { get; set; }
     }
+
+    public class ExampleItemValidator : AbstractValidator<ExampleItem>
+    {
+        public ExampleItemValidator()
+        {
+            RuleFor(exampleItem => exampleItem.Name).MaximumLength(50);
+            RuleFor(exampleItem => exampleItem.Id).GreaterThan(0);
+        }
+    }
 }
+
