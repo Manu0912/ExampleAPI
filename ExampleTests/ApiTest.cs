@@ -5,7 +5,7 @@ using ExampleAPI.Models;
 
 namespace ExampleTests
 {
-    public class UnitTest1
+    public class ApiTest
     {
         private readonly ExampleItemValidator _validator = new ExampleItemValidator();
 
