@@ -1,9 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
@@ -14,9 +9,9 @@ namespace ExampleAPI.Controllers
     [ApiController]
     public class ExampleItemsController : ControllerBase
     {
-        private readonly ExampleContext _context;
+        private readonly TestContext _context;
 
-        public ExampleItemsController(ExampleContext context)
+        public ExampleItemsController(TestContext context)
         {
             _context = context;
         }
@@ -25,14 +20,14 @@ namespace ExampleAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
-            return await _context.ExampleItems.ToListAsync();
+            return await _context.ExampleApis.ToListAsync();
         }
 
         // GET: api/ExampleItems/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ExampleItem>> GetExampleItem(long id)
         {
-            var exampleItem = await _context.ExampleItems.FindAsync(id);
+            var exampleItem = await _context.ExampleApis.FindAsync(id);
 
             if (exampleItem == null)
             {
@@ -78,7 +73,7 @@ namespace ExampleAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItem exampleItem)
         {
-            _context.ExampleItems.Add(exampleItem);
+            _context.ExampleApis.Add(exampleItem);
             await _context.SaveChangesAsync();
 
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
@@ -89,13 +84,13 @@ namespace ExampleAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExampleItem(long id)
         {
-            var exampleItem = await _context.ExampleItems.FindAsync(id);
+            var exampleItem = await _context.ExampleApis.FindAsync(id);
             if (exampleItem == null)
             {
                 return NotFound();
             }
 
-            _context.ExampleItems.Remove(exampleItem);
+            _context.ExampleApis.Remove(exampleItem);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -103,7 +98,7 @@ namespace ExampleAPI.Controllers
 
         private bool ExampleItemExists(long id)
         {
-            return _context.ExampleItems.Any(e => e.Id == id);
+            return _context.ExampleApis.Any(e => e.Id == id);
         }
     }
 }

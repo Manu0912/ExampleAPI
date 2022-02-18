@@ -7,8 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<ExampleContext>(opt =>
-    opt.UseInMemoryDatabase("ExampleList"));
+builder.Services.AddDbContext<TestContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TestDatabase"));
+});
 //builder.Services.AddSwaggerGen(c =>
 //{
 //    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
