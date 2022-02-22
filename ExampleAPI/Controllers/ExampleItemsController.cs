@@ -76,7 +76,6 @@ namespace ExampleAPI.Controllers
             _context.ExampleApis.Add(exampleItem);
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
             return CreatedAtAction(nameof(GetExampleItem), new { id = exampleItem.Id }, exampleItem);
         }
 
