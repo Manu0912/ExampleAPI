@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +18,9 @@ builder.Services.AddDbContext<TestContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("TestDatabase"));
 //});
 
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(options =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
         Title = "Example API",
@@ -31,6 +32,9 @@ builder.Services.AddSwaggerGen(c =>
             Url = new Uri("https://emanuelcacheda.herokuapp.com")
         },
     });;
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();
