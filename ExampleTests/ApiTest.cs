@@ -48,7 +48,7 @@ namespace ExampleTests
         public void TestIdValidator_IsLessThanZero_Fail()
         {
             var result = _validator.TestValidate(new ExampleItem() { Id = -1, Name = "sjdfbdskj", IsCompleted = true });
-            result.ShouldNotHaveValidationErrorFor(item => item.Id);
+            result.ShouldHaveValidationErrorFor(item => item.Id);
         }
 
     }
