@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
-
+using ExampleAPI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +11,10 @@ builder.Services.AddDbContext<TestContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("TestDatabase"));
 });
+
+builder.Services.AddSwaggerDocument();
+
+
 //builder.Services.AddSwaggerGen(c =>
 //{
 //    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
@@ -29,6 +33,9 @@ if (builder.Environment.IsDevelopment())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
+app.UseOpenApi();
+app.UseSwaggerUi3();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -36,3 +43,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+var exampleClient = new ExampleItemsClient();
