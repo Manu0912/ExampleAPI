@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
+using FluentValidation.Results;
+using FluentValidation;
 
 namespace ExampleAPI.Controllers
 {
@@ -27,6 +29,7 @@ namespace ExampleAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ExampleItem>> GetExampleItem(long id)
         {
+
             var exampleItem = await _context.ExampleApis.FindAsync(id);
 
             if (exampleItem == null)
@@ -73,6 +76,8 @@ namespace ExampleAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItem exampleItem)
         {
+          
+
             _context.ExampleApis.Add(exampleItem);
             await _context.SaveChangesAsync();
 

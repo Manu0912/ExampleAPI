@@ -12,7 +12,7 @@ function addItem() {
     const addNameTextbox = document.getElementById('add-name');
 
     const item = {
-        isComplete: false,
+        isCompleted: false,
         name: addNameTextbox.value.trim()
     };
 
@@ -45,7 +45,7 @@ function displayEditForm(id) {
 
     document.getElementById('edit-name').value = item.name;
     document.getElementById('edit-id').value = item.id;
-    document.getElementById('edit-isComplete').checked = item.isComplete;
+    document.getElementById('edit-isCompleted').checked = item.isCompleted;
     document.getElementById('editForm').style.display = 'block';
 }
 
@@ -53,7 +53,7 @@ function updateItem() {
     const itemId = document.getElementById('edit-id').value;
     const item = {
         id: parseInt(itemId, 10),
-        isComplete: document.getElementById('edit-isComplete').checked,
+        isCompleted: document.getElementById('edit-isCompleted').checked,
         name: document.getElementById('edit-name').value.trim()
     };
 
@@ -92,10 +92,10 @@ function _displayItems(data) {
     const button = document.createElement('button');
 
     data.forEach(item => {
-        let isCompleteCheckbox = document.createElement('input');
-        isCompleteCheckbox.type = 'checkbox';
-        isCompleteCheckbox.disabled = true;
-        isCompleteCheckbox.checked = item.isComplete;
+        let isCompletedCheckbox = document.createElement('input');
+        isCompletedCheckbox.type = 'checkbox';
+        isCompletedCheckbox.disabled = true;
+        isCompletedCheckbox.checked = item.isCompleted;
 
         let editButton = button.cloneNode(false);
         editButton.innerText = 'Edit';
@@ -108,7 +108,7 @@ function _displayItems(data) {
         let tr = tBody.insertRow();
 
         let td1 = tr.insertCell(0);
-        td1.appendChild(isCompleteCheckbox);
+        td1.appendChild(isCompletedCheckbox);
 
         let td2 = tr.insertCell(1);
         let textNode = document.createTextNode(item.name);
