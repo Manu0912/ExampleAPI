@@ -9,7 +9,8 @@
     <h1>To-do CRUD</h1>
     <h3>Add</h3>
     <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
-        <input type="text" id="add-name" placeholder="New to-do" required>
+        <input asp-for="Name" type="text" id="add-name" placeholder="New to-do" required>
+        <span asp-validation-for="Name" class="text-danger"></span>
         <input type="submit" value="Add">
     </form>
 
@@ -17,7 +18,7 @@
         <h3>Edit</h3>
         <form action="javascript:void(0);" onsubmit="updateItem()">
             <input type="hidden" id="edit-id">
-            <input type="checkbox" id="edit-isComplete" >
+            <input type="checkbox" id="edit-isCompleted">
             <input type="text" id="edit-name">
             <input type="submit" value="Save">
             <a onclick="closeInput()" aria-label="Close">&#10006;</a>
