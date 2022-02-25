@@ -1,40 +1,43 @@
-using Xunit;
-using System;
-using FluentValidation.TestHelper;
+﻿using System.Net;
+using System.Threading.Tasks;
 using ExampleAPI.Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Xunit;
 
-namespace ExampleTests
+namespace TodoDapper.Tests;
+
+public class SmokeTests
 {
-    public class ApiTest
+    [Fact]
+    public async Task GetTodos_Returns_OK()
     {
-        private readonly ExampleItemValidator _validator = new ExampleItemValidator();
+        await using var application = new TodoApplication();
 
-        [Fact]
-        public void TestNameValidatorPass()
-        {
-            var result = _validator.TestValidate(new ExampleItem() { Id = 1, Name = "sjdfbdskj", IsCompleted = true });
-            result.ShouldNotHaveValidationErrorFor(item => item.Name);
-        }
+        var client = application.CreateClient();
+        var response = await client.GetAsync("/api/ExampleItems");
 
-        [Fact]
-        public void TestNameValidatorFail()
-        {
-            var result = _validator.TestValidate(new ExampleItem() { Id = 1, Name = "sjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskjsjdfbdskj", IsCompleted = true });
-            result.ShouldHaveValidationErrorFor(item => item.Name);
-        }
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
 
-        [Fact]
-        public void TestIdValidatorPass()
-        {
-            var result = _validator.TestValidate(new ExampleItem() { Id = 1, Name = "sjdfbdskj", IsCompleted = true });
-            result.ShouldNotHaveValidationErrorFor(item => item.Id);
-        }
 
-        [Fact]
-        public void TestIdValidatorFail()
+    class TodoApplication : WebApplicationFactory<Program>
+    {
+        protected override IHost CreateHost(IHostBuilder builder)
         {
-            var result = _validator.TestValidate(new ExampleItem() { Id = -1, Name = "sjdfbdskj", IsCompleted = true });
-            result.ShouldHaveValidationErrorFor(item => item.Id);
+            // Add mock/test services to the builder here
+            builder.ConfigureServices(services =>
+            {
+                services.AddDbContext<TestContext>(options =>
+                {
+                    options.UseInMemoryDatabase("InMemoryExampleTest");
+                });
+            });
+
+            return base.CreateHost(builder);
         }
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 var builder = WebApplication.CreateBuilder(args);
 
