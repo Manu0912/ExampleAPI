@@ -1,16 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
-
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<TestContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TestDatabase"));
-});
+
 //builder.Services.AddSwaggerGen(c =>
 //{
 //    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
@@ -36,3 +34,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
