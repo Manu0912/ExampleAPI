@@ -33,19 +33,30 @@ public class SmokeTests
         await using var application = new TodoApplication();
         var client = application.CreateClient();
         var response = await client.PostAsJsonAsync("/api/ExampleItems", new ExampleItem() { IsCompleted =true, Name = "aaaaa" });
-       
+        await client.PostAsJsonAsync("/api/ExampleItems", new ExampleItem() { IsCompleted = true, Name = "aaaaa" });
+
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
 
     [Fact]
-    public async Task Put_Returns_OK()
+    public async Task Put_Returns_NoContent()
     {
         await using var application = new TodoApplication();
         var client = application.CreateClient();
-        await client.PostAsJsonAsync("/api/ExampleItems", new ExampleItem() {IsCompleted = true, Name = "aaaaa" });
-        var response = await client.PutAsJsonAsync("/api/ExampleItems/1", new ExampleItem() { IsCompleted = true, Name = "aaaaa" });
+        await client.PostAsJsonAsync("/api/ExampleItems", new ExampleItem() {Id = 5, IsCompleted = true, Name = "aaaaa" });
+        var response = await client.PutAsJsonAsync("/api/ExampleItems/5", new ExampleItem() { Id = 5, IsCompleted = true, Name = "aaaaa" });
         
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Put_Returns_BadRequest()
+    {
+        await using var application = new TodoApplication();
+        var client = application.CreateClient();
+        var response = await client.PutAsJsonAsync("/api/ExampleItems/5", new ExampleItem() { Id = 1, IsCompleted = true, Name = "aaaaa" });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -53,7 +64,8 @@ public class SmokeTests
     {
         await using var application = new TodoApplication();
         var client = application.CreateClient();
-        var response = await client.GetAsync("/api/ExampleItems/1");
+        await client.PostAsJsonAsync("/api/ExampleItems", new ExampleItem() {Id = 20, IsCompleted = true, Name = "aaaaa" });
+        var response = await client.GetAsync("/api/ExampleItems/20");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
@@ -63,9 +75,20 @@ public class SmokeTests
     {
         await using var application = new TodoApplication();
         var client = application.CreateClient();
+        await client.PostAsJsonAsync("/api/ExampleItems", new ExampleItem() { IsCompleted = true, Name = "aaaaa" });
         var response = await client.DeleteAsync("/api/ExampleItems/1");
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Delete_Returns_NotFound()
+    {
+        await using var application = new TodoApplication();
+        var client = application.CreateClient();
+        var response = await client.DeleteAsync("/api/ExampleItems/8");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     class TodoApplication : WebApplicationFactory<Program>
