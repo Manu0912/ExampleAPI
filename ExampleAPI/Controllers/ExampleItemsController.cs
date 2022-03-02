@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
+using MediatR;
+using ExampleAPI.MediatorExample;
 
 namespace ExampleAPI.Controllers
 {
@@ -10,17 +12,19 @@ namespace ExampleAPI.Controllers
     public class ExampleItemsController : ControllerBase
     {
         private readonly TestContext _context;
-
-        public ExampleItemsController(TestContext context)
+        private readonly ISender _mediator;
+        public ExampleItemsController(TestContext context, ISender mediator)
         {
             _context = context;
+            _mediator = mediator;
         }
 
         // GET: api/ExampleItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
-            return await _context.ExampleApis.ToListAsync();
+            var exampleItems = await _mediator.Send(new GetAllExampleItemsQuery());
+            return Ok(exampleItems);
         }
 
         // GET: api/ExampleItems/5
