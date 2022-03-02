@@ -13,6 +13,7 @@ namespace ExampleAPI.Controllers
     {
         private readonly TestContext _context;
         private readonly ISender _mediator;
+
         public ExampleItemsController(TestContext context, ISender mediator)
         {
             _context = context;
@@ -29,16 +30,10 @@ namespace ExampleAPI.Controllers
 
         // GET: api/ExampleItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ExampleItem>> GetExampleItem(long id)
+        public async Task<ActionResult<ExampleItem>> GetExampleItem(int id)
         {
-            var exampleItem = await _context.ExampleApis.FindAsync(id);
-
-            if (exampleItem == null)
-            {
-                return NotFound();
-            }
-
-            return exampleItem;
+            var exampleItem = await _mediator.Send(new GetExampleItemByIdQuery(id));
+            return exampleItem != null ? Ok(exampleItem) : NotFound();
         }
 
         // PUT: api/ExampleItems/5
