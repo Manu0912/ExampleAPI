@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
+using AutoMapper;
+using MySqlX.XDevAPI.Common;
 
 namespace ExampleAPI.Controllers
 {
@@ -10,10 +12,12 @@ namespace ExampleAPI.Controllers
     public class ExampleItemsController : ControllerBase
     {
         private readonly TestContext _context;
+        private readonly IMapper _mapper;
 
-        public ExampleItemsController(TestContext context)
+        public ExampleItemsController(TestContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/ExampleItems
@@ -68,17 +72,32 @@ namespace ExampleAPI.Controllers
             return NoContent();
         }
 
+
+        //public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItemDTO exampleItem)
+        //{
+
+        //    var _mappedExampleItem = _mapper.Map<ExampleItem>(exampleItem);
+
+        //    _context.ExampleApis.Add(_mappedExampleItem);
+        //    await _context.SaveChangesAsync();
+
+        //    //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+        //    return CreatedAtAction(nameof(GetExampleItem), new { id = _mappedExampleItem.Id }, exampleItem);
+        //}
         // POST: api/ExampleItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItem exampleItem)
-        {
-            _context.ExampleApis.Add(exampleItem);
-            await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<IActionResult> AddUser(ExampleItemDTO exampleItem)
+        //{
+        //    var _mappedExampleItem = _mapper.Map<ExampleItem>(exampleItem);
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetExampleItem), new { id = exampleItem.Id }, exampleItem);
-        }
+        //    _context.ExampleApis.Add(_mappedExampleItem);
+
+        //    await _context.SaveChangesAsync();
+
+        //    Console.WriteLine(_mappedExampleItem.Id);
+        //    return CreatedAtRoute(nameof(GetExampleItem), new { id = _mappedExampleItem.Id }, exampleItem); // return a 201
+        //}
 
         // DELETE: api/ExampleItems/5
         [HttpDelete("{id}")]
