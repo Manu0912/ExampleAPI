@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
+using AutoMapper;
 
 namespace ExampleAPI.Controllers
 {
@@ -10,17 +11,23 @@ namespace ExampleAPI.Controllers
     public class ExampleItemsController : ControllerBase
     {
         private readonly TestContext _context;
+        private readonly IMapper _mapper;
 
-        public ExampleItemsController(TestContext context)
+        public ExampleItemsController(TestContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/ExampleItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
-            return await _context.ExampleApis.ToListAsync();
+            var ExampleItems = await _context.ExampleApis.ToListAsync();
+
+            var modelMapped = _mapper.Map<List<ExampleItem>>(ExampleItems);
+
+            return Ok(modelMapped); 
         }
 
         // GET: api/ExampleItems/5
@@ -28,13 +35,13 @@ namespace ExampleAPI.Controllers
         public async Task<ActionResult<ExampleItem>> GetExampleItem(long id)
         {
             var exampleItem = await _context.ExampleApis.FindAsync(id);
-
             if (exampleItem == null)
             {
                 return NotFound();
             }
+            var modelMapped = _mapper.Map<ExampleItem>(exampleItem);
 
-            return exampleItem;
+            return Ok(modelMapped);
         }
 
         // PUT: api/ExampleItems/5
@@ -68,19 +75,20 @@ namespace ExampleAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/ExampleItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
-        public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItem exampleItem)
+        public async Task<IActionResult> PostTodoItem([FromBody] ExampleItemDTO exampleItem)
         {
-            _context.ExampleApis.Add(exampleItem);
+            var _mappedExampleItem = _mapper.Map<ExampleItem>(exampleItem);
+
+            _context.ExampleApis.Add(_mappedExampleItem);
+
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetExampleItem), new { id = exampleItem.Id }, exampleItem);
+            return CreatedAtAction(nameof(GetExampleItem), new { id = _mappedExampleItem.Id }, exampleItem); // return a 201
         }
 
-        // DELETE: api/ExampleItems/5
+      
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExampleItem(long id)
         {

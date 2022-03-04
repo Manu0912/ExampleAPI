@@ -16,6 +16,9 @@ builder.Services.AddDbContext<TestContext>(options =>
 //    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
 //});
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
