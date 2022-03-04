@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
+using MediatR;
+using ExampleAPI.MediatorExample;
+using System.Net;
 
 namespace ExampleAPI.Controllers
 {
@@ -10,31 +13,30 @@ namespace ExampleAPI.Controllers
     public class ExampleItemsController : ControllerBase
     {
         private readonly TestContext _context;
+        private readonly IMediator _mediator;
 
-        public ExampleItemsController(TestContext context)
+        public ExampleItemsController(TestContext context, IMediator mediator)
         {
             _context = context;
+            _mediator = mediator;
+
         }
 
         // GET: api/ExampleItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
-            return await _context.ExampleApis.ToListAsync();
+            var exampleItems = await _mediator.Send(new GetAllExampleItemsQuery());
+           
+            return Ok(exampleItems);
         }
 
         // GET: api/ExampleItems/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ExampleItem>> GetExampleItem(long id)
+        public async Task<ActionResult<ExampleItem>> GetExampleItem(int id)
         {
-            var exampleItem = await _context.ExampleApis.FindAsync(id);
-
-            if (exampleItem == null)
-            {
-                return NotFound();
-            }
-
-            return exampleItem;
+            var exampleItem = await _mediator.Send(new GetExampleItemByIdQuery(id));
+            return exampleItem != null ? Ok(exampleItem) : NotFound();
         }
 
         // PUT: api/ExampleItems/5
@@ -72,12 +74,10 @@ namespace ExampleAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItem exampleItem)
-        {
-            _context.ExampleApis.Add(exampleItem);
-            await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetExampleItem), new { id = exampleItem.Id }, exampleItem);
+        { 
+            var command = new PostExampleItemCommand(exampleItem);
+            var response = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetExampleItem), new { id = response.Id }, response);
         }
 
         // DELETE: api/ExampleItems/5

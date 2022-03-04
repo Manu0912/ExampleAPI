@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ExampleAPI.Models;
-
+using MediatR;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<TestContext>(options =>
 //{
 //    c.SwaggerDoc("v1", new() { Title = "TodoApi", Version = "v1" });
 //});
+builder.Services.AddMediatR(typeof(Program).Assembly);
 
 var app = builder.Build();
 
