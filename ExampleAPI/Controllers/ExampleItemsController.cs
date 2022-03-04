@@ -23,7 +23,10 @@ namespace ExampleAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
-            return await _context.ExampleApis.ToListAsync();
+            var ExampleItems = await _context.ExampleApis.ToListAsync();
+            var modelMapped = _mapper.Map<List<ExampleItem>>(ExampleItems);
+
+            return Ok(modelMapped); 
         }
 
         // GET: api/ExampleItems/5
