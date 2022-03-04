@@ -24,6 +24,7 @@ namespace ExampleAPI.Controllers
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
             var ExampleItems = await _context.ExampleApis.ToListAsync();
+
             var modelMapped = _mapper.Map<List<ExampleItem>>(ExampleItems);
 
             return Ok(modelMapped); 
@@ -34,13 +35,13 @@ namespace ExampleAPI.Controllers
         public async Task<ActionResult<ExampleItem>> GetExampleItem(long id)
         {
             var exampleItem = await _context.ExampleApis.FindAsync(id);
-
             if (exampleItem == null)
             {
                 return NotFound();
             }
+            var modelMapped = _mapper.Map<ExampleItem>(exampleItem);
 
-            return exampleItem;
+            return Ok(modelMapped);
         }
 
         // PUT: api/ExampleItems/5
