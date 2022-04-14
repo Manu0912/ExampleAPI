@@ -5,11 +5,16 @@ using ExampleAPI.Models;
 using MediatR;
 using ExampleAPI.MediatorExample;
 using System.Net;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Auth0.AuthenticationApi;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExampleAPI.Controllers
 {
     [Route("api/ExampleItems")]
     [ApiController]
+    
     public class ExampleItemsController : ControllerBase
     {
         private readonly TestContext _context;
@@ -24,6 +29,7 @@ namespace ExampleAPI.Controllers
 
         // GET: api/ExampleItems
         [HttpGet]
+        
         public async Task<ActionResult<IEnumerable<ExampleItem>>> GetExampleItems()
         {
             var exampleItems = await _mediator.Send(new GetAllExampleItemsQuery());
@@ -33,6 +39,7 @@ namespace ExampleAPI.Controllers
 
         // GET: api/ExampleItems/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<ExampleItem>> GetExampleItem(int id)
         {
             var exampleItem = await _mediator.Send(new GetExampleItemByIdQuery(id));
@@ -41,7 +48,9 @@ namespace ExampleAPI.Controllers
 
         // PUT: api/ExampleItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
+        
         public async Task<IActionResult> PutExampleItem(long id, ExampleItem exampleItem)
         {
             if (id != exampleItem.Id)
@@ -73,6 +82,7 @@ namespace ExampleAPI.Controllers
         // POST: api/ExampleItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ExampleItem>> PostTodoItem(ExampleItem exampleItem)
         { 
             var command = new PostExampleItemCommand(exampleItem);
@@ -82,6 +92,7 @@ namespace ExampleAPI.Controllers
 
         // DELETE: api/ExampleItems/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteExampleItem(long id)
         {
             var exampleItem = await _context.ExampleApis.FindAsync(id);
